@@ -1,35 +1,30 @@
 import paho.mqtt.client as mqtt
 
-client = mqtt.Client("dataUpload");
+client = mqtt.Client(client_id="dataUpload")  # default callback_api_version=2
 
-#/gokart/dataPack
-#/gokart/dataFaults
-
-def on_connect(client, userdata, flags, rc):
-    if rc == 0:
-        print("Forbundet til hiveMQ cluster")
+def on_connect(client, userdata, flags, reasonCode, properties):
+    if reasonCode == 0:
+        print("Forbundet til HiveMQ cluster")
         client.subscribe("gokart/dataPack")
         client.subscribe("gokart/dataFaults")
     else:
-        print("Forbindelse fejlet rc: ", rc)
-
-def on_logIn(client, userdata, level, buf):
-    print("log: ", buf);
+        print("Forbindelse fejlet rc:", reasonCode)
 
 def on_message(client, userdata, msg):
     print(f"Modtaget besked på {msg.topic}: {msg.payload.decode()}")
 
+def on_log(client, userdata, level, buf):
+    print("log:", buf)
+
 client.on_connect = on_connect
-client.on_log = on_logIn
 client.on_message = on_message
+client.on_log = on_log
+
+client.username_pw_set("dataUpload", "dataUpload123")
+client.tls_set()
 
 broker = "4d881b47b776416f9fe8b1df9fe3ae48.s1.eu.hivemq.cloud"
 port = 8883
-
-client.username_pw_set("dataUpload", "dataUpload123")
-
-client.tls_set()
-
 client.connect(broker, port)
 
 client.loop_forever()
