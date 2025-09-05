@@ -6,8 +6,8 @@ client = mqtt.Client(client_id="dataUpload", protocol=mqtt.MQTTv5)
 def on_connect(client, userdata, flags, reasonCode, properties):
     if reasonCode == 0:
         print("Forbundet til HiveMQ cluster")
-        client.subscribe("gokart/dataPack")
-        client.subscribe("gokart/dataFaults")
+        client.subscribe("gokart/dataPack/#")
+        client.subscribe("gokart/dataFaults/#")
     else:
         print("Forbindelse fejlet rc:", reasonCode)
 
