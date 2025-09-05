@@ -1,6 +1,7 @@
 import paho.mqtt.client as mqtt
 
-client = mqtt.Client(client_id="dataUpload")  # default callback_api_version=2
+client = mqtt.Client(client_id="dataUpload", protocol=mqtt.MQTTv5)
+
 
 def on_connect(client, userdata, flags, reasonCode, properties):
     if reasonCode == 0:
